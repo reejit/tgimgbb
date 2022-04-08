@@ -9,7 +9,7 @@ load_dotenv()
 
 Bot = Client(
            api_id = os.environ.get("API_ID"),
-           api_hash= os.environ.get("HASH"),
+           api_hash= os.environ.get("API_HASH"),
            bot_token = os.environ.get("TOKEN"),
            session_name = ':memory:'
 ) 
@@ -29,7 +29,7 @@ Send me a picture to get started.
 
 @Bot.on_message(filters.photo & filters.private)
 async def upload_(client: Client, message: Message):
-  imgbb = cl(os.environ.get('API KEY'))
+  imgbb = cl(os.environ.get('IMGBB'))
   file = await bot.download_media(message, DOWNLOAD)
   try:
     image = await imgbb.upload(file)
@@ -37,6 +37,6 @@ async def upload_(client: Client, message: Message):
     await imgbb.close()
   except Exception as e:
     await message.reply_text("Error:\n{}".format(e))
-
+  os.remove(file)
 Bot.run()
 
