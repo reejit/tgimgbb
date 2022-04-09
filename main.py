@@ -35,13 +35,13 @@ async def upload_(client: Client, message: Message):
   file = await bot.download_media(message, DOWNLOAD)
   try:
     with open(file, "rb") as file:
-    url = "https://api.imgbb.com/1/upload"
-    payload = {
+     url = "https://api.imgbb.com/1/upload"
+     payload = {
         "key": os.environ.get('IMGBB'),
         "image": base64.b64encode(file.read()),
-    }
-    res = requests.post(url, payload).json
-    url = res['data']['url']
+     }
+     res = requests.post(url, payload).json
+     url = res['data']['url']
     await message.reply_text(f"Your photo was successful uploaded!\nThe url of the image is {url}.")
     await imgbb.close()
   except Exception as e:
