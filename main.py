@@ -1,13 +1,19 @@
-import os
 from pyrogram import Client, filters
 import requests
 from dotenv import load_dotenv
 from pyrogram.types import Message
 import base64
 import json
+from imgbb.client import Client as cl
+import os
+import aiohttp
 
-download = "./"
+key = os.getenv('IMGBB')
 load_dotenv()
+session = aiohttp.ClientSession()
+myclient = cl(key,session)
+
+DOWNLOAD = "./"
 
 Bot = Client(
            api_id = os.environ.get("API_ID"),
@@ -34,16 +40,9 @@ async def upload_(client: Client, message: Message):
   
   file = await bot.download_media(message, DOWNLOAD)
   try:
-    with open(file, "rb") as file:
-     url = "https://api.imgbb.com/1/upload"
-     payload = {
-        "key": os.environ.get('IMGBB'),
-        "image": base64.b64encode(file.read()),
-     }
-     res = requests.post(url, payload).json
-     url = res['data']['url']
+    response = await myclient.post(file)
+    url = response['data']['url']
     await message.reply_text(f"Your photo was successful uploaded!\nThe url of the image is {url}.")
-    await imgbb.close()
   except Exception as e:
     await message.reply_text("Error:\n{}".format(e))
   os.remove(file)
