@@ -1,3 +1,4 @@
 imgbbpy
 pyrogram
+aiohttp
 tgcrypto
